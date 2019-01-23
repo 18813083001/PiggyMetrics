@@ -1,0 +1,85 @@
+version: '2.1'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5671:5671
+      - 5672:5672
+      - 15672:15672
+      - 15671:15671
+      - 25672:25672
+
+  mongodb:
+    image: mongo:3
+    ports:
+      - 27017:27017
+
+  registry:
+    build: registry
+    ports:
+      - 8761:8761
+    depends_on:
+      - config
+  gateway:
+    build: gateway
+    ports:
+      - 4000:4000
+    depends_on:
+      - config
+
+  auth-service:
+    build: auth-service
+    ports:
+      - 5000:5000
+    depends_on:
+      - config
+
+#  auth-mongodb:
+#    build: mongodb
+#    ports:
+#      - 25000:27017
+
+  account-service:
+    build: account-service
+    ports:
+      - 6000:6000
+    depends_on:
+      - config
+
+#  account-mongodb:
+#    build: mongodb
+#    ports:
+#      - 26000:27017
+
+  statistics-service:
+    build: statistics-service
+    ports:
+      - 7000:7000
+    depends_on:
+       - config
+
+#  statistics-mongodb:
+#    build: mongodb
+#    ports:
+#      - 27000:27017
+
+  notification-service:
+    build: notification-service
+    ports:
+      - 8000:8000
+    depends_on:
+      - config
+
+#  notification-mongodb:
+#    build: mongodb
+#    ports:
+#      - 28000:27017
+
+  monitoring:
+    build: monitoring
+    depends_on:
+      - config
+  config:
+    build: config
+    ports:
+      - 8888:8888
